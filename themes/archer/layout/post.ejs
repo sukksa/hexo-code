@@ -12,7 +12,7 @@
             <%_ } else { _%>
             <p><%- __('author') %>：<a href="<%- config.url %>"><%- config.author %></a>
             <%_ } _%>
-            <p><%- __('post_link') %>：<a href="<%- page.permalink %>"><%- page.permalink %></a>
+            <p><%- __('post_link') %>：<a href="<%- page.permalink %>"><%- decodeURIComponent(page.permalink) %></a>
             <!-- <p><%- __('publish_date') %>：<a href="<%- page.permalink %>"><%- (page.date).format('MMMM Do YYYY, h:mm:ss a') %></a>
             <p><%- __('update_date') %>：<a href="<%- page.permalink %>"><%- (page.updated).format('MMMM Do YYYY, h:mm:ss a') %></a> -->
             <p><%- __('publish_date') %>：<a href="<%- page.permalink %>"><%- (page.date).format(theme.copyright.time_format) %></a>
