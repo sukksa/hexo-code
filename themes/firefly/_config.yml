@@ -131,6 +131,8 @@ bangumi:
   pagination: true
   # 每行卡片数量，可选 4 或 5
   columns: 4
+  # 是否在「站点统计」侧栏里显示追番量（在看 + 看过）
+  show_in_stats: true
   # 数据缓存时长（小时），离线构建时自动回退到旧缓存
   cache_ttl: 6
   # Tab 配置：key 唯一，path 为该 Tab 第 1 页的路径

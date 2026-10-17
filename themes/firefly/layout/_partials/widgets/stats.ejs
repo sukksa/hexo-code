@@ -18,6 +18,10 @@ site.posts.forEach(function(post) {
 
 var totalWordsFormatted = totalWords.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 var latestPostDate = latestPost ? latestPost.date.toDate().toISOString() : '';
+
+// 追番量：Bangumi「在看 + 看过」合计，由 scripts/generators/bangumi.js 写入
+var bangumiCounts = theme.bangumi && theme.bangumi._counts;
+var showBangumiStats = !!(bangumiCounts && theme.bangumi.show_in_stats !== false);
 %>
 
 <div class="widget stats-widget">
@@ -49,6 +53,17 @@ var latestPostDate = latestPost ? latestPost.date.toDate().toISOString() : '';
       </div>
       <span class="stat-value"><%= site.tags.length %></span>
     </div>
+    
+    <!-- Bangumi 追番量（在看 + 看过） -->
+    <% if (showBangumiStats) { %>
+    <div class="stat-item">
+      <div class="stat-label">
+        <span class="material-symbols-outlined stat-icon">live_tv</span>
+        <span>追番</span>
+      </div>
+      <span class="stat-value" title="Bangumi 在看 + 看过 合计"><%= bangumiCounts.total %></span>
+    </div>
+    <% } %>
     
     <!-- Total Words -->
     <div class="stat-item">

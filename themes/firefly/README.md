@@ -174,6 +174,7 @@ bangumi:
   page_size: 20          # 每页条数（关闭分页时作为每批加载条数）
   pagination: true       # false = 不分页，滚动到底部自动加载下一批
   columns: 4             # 每行卡片数量，可选 4 或 5
+  show_in_stats: true    # 在「站点统计」里显示追番量（在看 + 看过）
   cache_ttl: 6           # 缓存小时数，离线构建时回退到旧缓存
   tabs:
     - { key: watching, label: 在看, type: 3, path: /bangumi }

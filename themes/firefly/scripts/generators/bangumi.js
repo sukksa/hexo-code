@@ -231,7 +231,14 @@ function buildPager(basePath, current, total) {
 
 hexo.extend.generator.register('firefly-bangumi', async function () {
   const cfg = getConfig();
-  if (!cfg.enabled) return;
+  const themeConfig = (hexo.theme && hexo.theme.config) || {};
+  themeConfig.bangumi = themeConfig.bangumi || {};
+
+  if (!cfg.enabled) {
+    // 关闭时清掉统计计数，避免侧栏「站点统计」残留旧数据
+    delete themeConfig.bangumi._counts;
+    return;
+  }
 
   const cache = readCache();
   const results = {};
@@ -259,6 +266,13 @@ hexo.extend.generator.register('firefly-bangumi', async function () {
   cfg.tabs.forEach(function (tab) {
     counts[tab.key] = results[tab.key].items.length;
   });
+
+  // 供「站点统计」侧栏使用：在看（type 3）+ 看过（type 2）的收藏总数
+  const totalCollections = cfg.tabs.reduce(function (sum, tab) {
+    if (tab.type !== 2 && tab.type !== 3) return sum;
+    return sum + (counts[tab.key] || 0);
+  }, 0);
+  themeConfig.bangumi._counts = { total: totalCollections, tabs: counts };
 
   const updatedAt = Math.max.apply(
     null,
