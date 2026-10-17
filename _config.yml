@@ -123,7 +123,7 @@ jsonContent:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: archer
+theme: firefly
 
 # abstract
 excerpt:
@@ -131,6 +131,13 @@ excerpt:
   excerpt_excludes: ["pre", "blockquote", "img", "code"]
   more_excludes: []
   hideWholePostExcerpts: true
+
+# Search
+## firefly 主题的搜索框会读取这里生成的索引文件
+search:
+  path: local-search.xml
+  field: post
+  content: true
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
