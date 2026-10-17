@@ -78,6 +78,9 @@
 <link rel="stylesheet" href="<%= url_for('/css/dynamic.css') %>?v=<%= cssVersion %>">
 <link rel="stylesheet" href="<%= url_for('/css/water-waves.css') %>?v=<%= cssVersion %>">
 <link rel="stylesheet" href="<%= url_for('/css/responsive.css') %>?v=<%= cssVersion %>">
+<% if (page.layout === 'bangumi') { %>
+<link rel="stylesheet" href="<%= url_for('/css/bangumi.css') %>?v=<%= cssVersion %>">
+<% } %>
 <% if (theme.iconfont) { %>
 <link rel="stylesheet" href="<%= theme.iconfont %>">
 <% } %>

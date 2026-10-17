@@ -138,6 +138,7 @@ var randomPosts = allOtherPosts.slice(0, 5);
     </div>
   </nav>
 
+  <% if (theme.post && theme.post.related && theme.post.related.enable) { %>
   <!-- Side-by-Side Recommendations Grid -->
   <div class="post-recommendations-row">
     <!-- Left Column: Related Posts -->
@@ -220,4 +221,5 @@ var randomPosts = allOtherPosts.slice(0, 5);
       </ul>
     </div>
   </div>
+  <% } %>
 </div>

@@ -88,6 +88,22 @@ var logoIcon = theme.logo ? theme.logo.icon : null;
         </li>
         <% } %>
 
+        <!-- Bangumi 追番 -->
+        <% var bangumiCfg = theme.bangumi || {}; %>
+        <% var bangumiTabs = bangumiCfg.tabs || []; %>
+        <% var bangumiEnabled = theme.pages && theme.pages.bangumi !== false && bangumiCfg.enable !== false && bangumiTabs.length > 0; %>
+        <% if (bangumiEnabled) { %>
+        <li class="navbar-link-item" role="none">
+          <a href="<%= url_for(bangumiTabs[0].path || '/bangumi') %>" class="navbar-link<%= page.layout === 'bangumi' ? ' active' : '' %>" role="menuitem">
+            <span class="navbar-link-content">
+              <span class="material-symbols-outlined">live_tv</span>
+              <span><%= bangumiCfg.label || '追番' %></span>
+            </span>
+            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+          </a>
+        </li>
+        <% } %>
+
         <!-- About -->
         <% var aboutChildren = (navConfig.groups && navConfig.groups.about) || []; %>
         <% if (aboutChildren.length > 0) { %>

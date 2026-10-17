@@ -157,15 +157,29 @@ type: gallery
 配置文件：在 `_config.yml` 的 `gallery:` 节点下配置图片瀑布流列宽与相册项目。
 
 #### 追番 / 番组页 (`/bangumi/`)
-命令：`hexo new page bangumi`  
-文件路径：`source/bangumi/index.md`  
-Front-matter 配置：
+
+由主题自动生成，**不需要** `hexo new page`，数据来自 Bangumi 的收藏列表：
+
+- 模板：`layout/bangumi.ejs`（卡片在 `layout/_partials/bangumi/`）
+- 生成器：`scripts/generators/bangumi.js`（构建时请求 `api.bgm.tv`，缓存到站点根目录 `.bangumi-cache.json`）
+- 样式：`source/css/bangumi.css`
+
+在 `_config.yml` 的 `bangumi:` 节点中配置（站点级可用 `_config.firefly.yml` 覆盖）：
+
 ```yaml
----
-title: 追番
-type: bangumi
----
+bangumi:
+  enable: true
+  user: "你的 Bangumi 用户名或 UID"
+  label: "追番"          # 导航与页面标题
+  page_size: 20          # 每页条数
+  cache_ttl: 6           # 缓存小时数，离线构建时回退到旧缓存
+  tabs:
+    - { key: watching, label: 在看, type: 3, path: /bangumi }
+    - { key: watched,  label: 看过, type: 2, path: /bangumi/watched, show_progress: false }
 ```
+
+生成的路由为 `{path}/`、`{path}/page/N/`；`show_progress: false` 的 Tab 不显示「看到 x 话」。
+`pages.bangumi: false` 或 `bangumi.enable: false` 会同时隐藏导航里的「追番」入口。
 
 #### 留言板页 (`/guestbook/`)
 命令：`hexo new page guestbook`  

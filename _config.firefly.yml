@@ -105,11 +105,40 @@ pages:
   # 留言板页面
   guestbook: false
   # 番组页面（追番/追剧列表）
-  # firefly 没有 bangumi 模板，这一页由 scripts/firefly-bangumi.js 生成，
-  # 构建时从 Bangumi API 拉取「在看」动画；false 会同时隐藏导航里的「追番」
+  # 由主题生成：themes/firefly/scripts/generators/bangumi.js + layout/bangumi.ejs
+  # 数据抓取与 Tab 见下方 bangumi 配置；false 会同时隐藏导航里的「追番」
   bangumi: true
   # 相册页面
   gallery: false
+
+# ============================================================
+#  Bangumi 追番页
+#  规则：Bangumi 用户 + 若干 Tab（每个 Tab 对应一种收藏类型）
+#  type: 1=想看 2=看过 3=在看 4=搁置 5=抛弃（subject_type=2 即动画）
+# ============================================================
+bangumi:
+  # 总开关（还需要 pages.bangumi 不为 false）
+  enable: true
+  # Bangumi 用户名或 UID（个人主页地址末尾那段）
+  user: "726667"
+  # 导航与页面标题
+  label: "追番"
+  # 每页条数
+  page_size: 20
+  # 数据缓存时长（小时）；离线构建时自动回退到旧缓存
+  cache_ttl: 6
+  # Tab 配置：key 唯一，path 为该 Tab 第 1 页的路径
+  # show_progress: false 表示这一 Tab 的卡片不显示「看到 x 话」
+  tabs:
+    - key: watching
+      label: 在看
+      type: 3
+      path: /bangumi
+    - key: watched
+      label: 看过
+      type: 2
+      path: /bangumi/watched
+      show_progress: false
 
 # ============================================================
 #  文章分类栏 (对应模板中 theme.category_bar.*)
@@ -167,8 +196,7 @@ post:
   prev_next:
     enable: true
   # 相关文章 / 随机文章（文章底部那一整行推荐）
-  # 主题模板本身不读这个开关，由脚本 scripts/firefly-post-footer.js 在构建时处理
-  # false = 隐藏整行（相关文章 + 随机文章），true = 恢复显示
+  # 由主题 footer-widgets.ejs 直接读取：false = 隐藏整行，true = 显示
   related:
     enable: false
     maxCount: 6

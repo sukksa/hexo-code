@@ -1,0 +1,34 @@
+<%
+/**
+ * 追番页卡片
+ *   item         条目数据（name / nameOriginal / cover / eps / totalEps / score / date / url）
+ *   showProgress 是否显示观看进度（「看过」等 Tab 可关闭）
+ */
+var item = item || {};
+var title = item.name || item.nameOriginal || '未知条目';
+var sub = item.nameOriginal && item.nameOriginal !== item.name ? item.nameOriginal : '';
+var year = item.date ? String(item.date).slice(0, 4) : '';
+var progress = '';
+
+if (showProgress !== false && item.eps > 0) {
+  progress = item.totalEps ? '看到 ' + item.eps + ' / ' + item.totalEps + ' 话' : '看到 ' + item.eps + ' 话';
+}
+%>
+<a class="bangumi-card card-base" href="<%= item.url %>" target="_blank" rel="noopener noreferrer" title="<%= title %>">
+  <div class="bangumi-cover">
+    <% if (item.cover) { %>
+    <img src="<%= item.cover %>" alt="<%= title %>" loading="lazy" referrerpolicy="no-referrer">
+    <% } %>
+  </div>
+  <div class="bangumi-info">
+    <h3 class="bangumi-title"><%= title %></h3>
+    <% if (sub) { %>
+    <span class="bangumi-sub"><%= sub %></span>
+    <% } %>
+    <div class="bangumi-meta">
+      <% if (year) { %><span class="bangumi-year"><%= year %></span><% } %>
+      <% if (item.score > 0) { %><span class="bangumi-score">★ <%= item.score.toFixed(1) %></span><% } %>
+      <% if (progress) { %><span class="bangumi-progress"><%= progress %></span><% } %>
+    </div>
+  </div>
+</a>

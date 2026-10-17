@@ -1,0 +1,34 @@
+<%
+/**
+ * 追番页分页
+ *   pager: { current, total, links: [{ page, path, active } | { ellipsis }], prevPath, nextPath }
+ */
+pager = pager || {};
+%>
+<% if (pager.total > 1) { %>
+<nav class="bangumi-pager" aria-label="分页">
+  <% if (pager.prevPath) { %>
+  <a class="bangumi-page-link" href="<%= url_for(pager.prevPath) %>#bangumi-top" rel="prev">上一页</a>
+  <% } else { %>
+  <span class="bangumi-page-link disabled">上一页</span>
+  <% } %>
+
+  <% (pager.links || []).forEach(function (link) { %>
+    <% if (link.ellipsis) { %>
+  <span class="bangumi-page-ellipsis">…</span>
+    <% } else { %>
+  <a
+    class="bangumi-page-link<%= link.active ? ' active' : '' %>"
+    href="<%= url_for(link.path) %>#bangumi-top"
+    <% if (link.active) { %>aria-current="page"<% } %>
+  ><%= link.page %></a>
+    <% } %>
+  <% }); %>
+
+  <% if (pager.nextPath) { %>
+  <a class="bangumi-page-link" href="<%= url_for(pager.nextPath) %>#bangumi-top" rel="next">下一页</a>
+  <% } else { %>
+  <span class="bangumi-page-link disabled">下一页</span>
+  <% } %>
+</nav>
+<% } %>

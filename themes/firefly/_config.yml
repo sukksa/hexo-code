@@ -107,10 +107,38 @@ pages:
   sponsor: true
   # 留言板页面
   guestbook: true
-  # 番组页面（追番/追剧列表）
+  # 番组页面（追番/追剧列表，见下方 bangumi 配置）
   bangumi: true
   # 相册页面
   gallery: true
+
+# ============================================================
+#  Bangumi 追番页（layout/bangumi.ejs + scripts/generators/bangumi.js）
+#  默认关闭；填好 user 并把 enable 设为 true 后即可生成 /bangumi/
+#  type: 1=想看 2=看过 3=在看 4=搁置 5=抛弃（subject_type=2 即动画）
+# ============================================================
+bangumi:
+  enable: false
+  # Bangumi 用户名或 UID（个人主页地址末尾那段）
+  user: ""
+  # 导航与页面标题
+  label: "追番"
+  # 每页条数
+  page_size: 20
+  # 数据缓存时长（小时），离线构建时自动回退到旧缓存
+  cache_ttl: 6
+  # Tab 配置：key 唯一，path 为该 Tab 第 1 页的路径
+  # show_progress: false 表示这一 Tab 的卡片不显示「看到 x 话」
+  tabs:
+    - key: watching
+      label: 在看
+      type: 3
+      path: /bangumi
+    - key: watched
+      label: 看过
+      type: 2
+      path: /bangumi/watched
+      show_progress: false
 
 # ============================================================
 #  文章分类栏 (对应模板中 theme.category_bar.*)
@@ -167,7 +195,7 @@ post:
   # 上下篇导航
   prev_next:
     enable: true
-  # 相关文章
+  # 相关文章 / 随机文章（文章底部推荐整行，由 footer-widgets.ejs 读取）
   related:
     enable: false
     maxCount: 6

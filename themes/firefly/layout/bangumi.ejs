@@ -1,0 +1,59 @@
+<%
+/**
+ * Bangumi 追番页
+ *
+ * 数据由 scripts/generators/bangumi.js 生成，写入 page.bangumi：
+ *   label / user / activeKey / tabs / items / currentPage / totalPages / pager / updatedText
+ */
+var bg = page.bangumi || {};
+var tabs = bg.tabs || [];
+var items = bg.items || [];
+var pager = bg.pager || {};
+var label = bg.label || '追番';
+var userPage = 'https://bangumi.tv/user/' + (bg.user || '') + '/collections';
+%>
+
+<div id="main-grid" class="main-grid-layout has-no-sidebar">
+  <main id="main-content" class="page-container full-width">
+    <%- partial('_partials/post/content-nav') %>
+
+    <div class="bangumi-page" id="bangumi-top">
+      <div class="bangumi-header card-base">
+        <h1><%= label %></h1>
+        <p>
+          来自 <a href="<%= userPage %>" target="_blank" rel="noopener noreferrer">Bangumi</a> 的动画收藏
+          <% tabs.forEach(function (tab) { %> · <%= tab.label %> <%= tab.count %> 部<% }); %>
+          <% if (bg.updatedText) { %> · 数据同步于 <%= bg.updatedText %><% } %>
+        </p>
+        <div class="bangumi-tabs">
+          <% tabs.forEach(function (tab) { %>
+          <a
+            class="bangumi-tab<%= tab.key === bg.activeKey ? ' active' : '' %>"
+            href="<%= url_for(tab.path + '/') %>#bangumi-top"
+            <% if (tab.key === bg.activeKey) { %>aria-current="page"<% } %>
+          >
+            <%= tab.label %><span class="bangumi-tab-count"><%= tab.count %></span>
+          </a>
+          <% }); %>
+        </div>
+      </div>
+
+      <% if (items.length > 0) { %>
+      <div class="bangumi-grid">
+        <% items.forEach(function (item) { %>
+        <%- partial('_partials/bangumi/card', { item: item, showProgress: bg.showProgress }) %>
+        <% }); %>
+      </div>
+      <%- partial('_partials/bangumi/pager', { pager: pager }) %>
+      <% } else { %>
+      <div class="bangumi-empty card-base">
+        <p>暂时没有「<%= label %>」的收藏数据。</p>
+        <p>可能是构建时没有联网，或 Bangumi API 暂时不可用；重新生成博客会自动重试。</p>
+        <p><a href="<%= userPage %>" target="_blank" rel="noopener noreferrer">直接去 Bangumi 查看</a></p>
+      </div>
+      <% } %>
+    </div>
+  </main>
+
+  <%- partial('_partials/footer') %>
+</div>
