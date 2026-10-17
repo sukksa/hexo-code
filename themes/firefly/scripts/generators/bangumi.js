@@ -50,11 +50,16 @@ function getConfig() {
       };
     });
   const cacheHours = Number(cfg.cache_ttl);
+  const columns = parseInt(cfg.columns, 10) === 5 ? 5 : 4;
   return {
     enabled: pages.bangumi !== false && cfg.enable !== false && Boolean(cfg.user) && tabs.length > 0,
     user: String(cfg.user || ''),
     label: cfg.label || '追番',
     pageSize: Math.max(1, parseInt(cfg.page_size, 10) || 20),
+    // 关闭分页时忽略 page_size，所有条目在一页里以瀑布流展示
+    pagination: cfg.pagination !== false,
+    // 每行卡片数，仅支持 4 或 5
+    columns: columns,
     cacheTtl: (Number.isFinite(cacheHours) && cacheHours >= 0 ? cacheHours : 6) * 60 * 60 * 1000,
     tabs: tabs
   };
@@ -263,36 +268,94 @@ hexo.extend.generator.register('firefly-bangumi', async function () {
   const firstTabKey = cfg.tabs[0].key;
   const routes = [];
 
+  // 用主题的卡片模板渲染 chunk 片段，保证和首屏卡片完全一致
+  const cardView = typeof hexo.theme.getView === 'function'
+    ? hexo.theme.getView('_partials/bangumi/card')
+    : null;
+
+  function renderCards(list, showProgress) {
+    if (!cardView) return '';
+    return list
+      .map(function (item) {
+        return cardView.renderSync({ item: item, showProgress: showProgress });
+      })
+      .join('\n');
+  }
+
   cfg.tabs.forEach(function (tab) {
     const items = results[tab.key].items;
+    const pagination = cfg.pagination;
     const totalPages = Math.max(1, Math.ceil(items.length / cfg.pageSize));
+    const clean = tab.path.replace(/^\/+/, '').replace(/\/+$/, '');
+    const baseData = {
+      label: cfg.label,
+      user: cfg.user,
+      activeKey: tab.key,
+      showProgress: tab.showProgress,
+      tabs: cfg.tabs.map(function (t) {
+        return { key: t.key, label: t.label, path: t.path, count: counts[t.key] };
+      }),
+      columns: cfg.columns,
+      mode: 'grid',
+      updatedText: formatTime(updatedAt)
+    };
 
-    for (let page = 1; page <= totalPages; page++) {
-      routes.push({
-        path: routePath(tab.path, page),
-        layout: 'bangumi',
-        data: {
+    if (pagination) {
+      for (let page = 1; page <= totalPages; page++) {
+        routes.push({
+          path: routePath(tab.path, page),
           layout: 'bangumi',
-          title:
-            cfg.label +
-            (tab.key === firstTabKey ? '' : ' · ' + tab.label) +
-            (page > 1 ? ' · 第 ' + page + ' 页' : ''),
-          permalink: siteUrl + pagePath(tab.path, page),
-          bangumi: {
-            label: cfg.label,
-            user: cfg.user,
-            activeKey: tab.key,
-            showProgress: tab.showProgress,
-            tabs: cfg.tabs.map(function (t) {
-              return { key: t.key, label: t.label, path: t.path, count: counts[t.key] };
-            }),
-            items: items.slice((page - 1) * cfg.pageSize, page * cfg.pageSize),
-            currentPage: page,
-            totalPages: totalPages,
-            pager: buildPager(tab.path, page, totalPages),
-            updatedText: formatTime(updatedAt)
+          data: {
+            layout: 'bangumi',
+            title:
+              cfg.label +
+              (tab.key === firstTabKey ? '' : ' · ' + tab.label) +
+              (page > 1 ? ' · 第 ' + page + ' 页' : ''),
+            permalink: siteUrl + pagePath(tab.path, page),
+            bangumi: Object.assign({}, baseData, {
+              pagination: true,
+              infinite: null,
+              items: items.slice((page - 1) * cfg.pageSize, page * cfg.pageSize),
+              currentPage: page,
+              totalPages: totalPages,
+              pager: buildPager(tab.path, page, totalPages)
+            })
           }
-        }
+        });
+      }
+      return;
+    }
+
+    // 关闭分页：首屏只渲染第一批，其余生成为 chunk 片段，由前端滚动到底部时按需加载
+    routes.push({
+      path: routePath(tab.path, 1),
+      layout: 'bangumi',
+      data: {
+        layout: 'bangumi',
+        title: cfg.label + (tab.key === firstTabKey ? '' : ' · ' + tab.label),
+        permalink: siteUrl + pagePath(tab.path, 1),
+        bangumi: Object.assign({}, baseData, {
+          pagination: false,
+          infinite:
+            totalPages > 1
+              ? {
+                  chunkBase: tab.path + '/chunk/',
+                  totalChunks: totalPages,
+                  nextChunk: 2
+                }
+              : null,
+          items: items.slice(0, cfg.pageSize),
+          currentPage: 1,
+          totalPages: totalPages,
+          pager: null
+        })
+      }
+    });
+
+    for (let page = 2; page <= totalPages; page++) {
+      routes.push({
+        path: clean + '/chunk/' + page + '.html',
+        data: renderCards(items.slice((page - 1) * cfg.pageSize, page * cfg.pageSize), tab.showProgress)
       });
     }
   });

@@ -3,14 +3,36 @@
  * About page template.
  * Shows profile widget, custom content, and optionally comments.
  *
+ * Layout mirrors index.ejs: left/right sidebars follow theme.sidebar.position.
+ *
  * Variables:
  *   page       - current about page
  *   config     - Hexo site configuration
  *   theme      - theme _config.yml values
  */
+var sidebar = theme.sidebar || {};
+var sidebarPosition = sidebar.position || 'both';
+var showLeftSidebar = sidebarPosition === 'both' || sidebarPosition === 'left';
+var showRightSidebar = sidebarPosition === 'both' || sidebarPosition === 'right';
+var gridClass = 'has-no-sidebar';
+if (showLeftSidebar && showRightSidebar) {
+  gridClass = 'has-both-sidebars';
+} else if (showLeftSidebar) {
+  gridClass = 'has-left-sidebar';
+} else if (showRightSidebar) {
+  gridClass = 'has-right-sidebar';
+}
 %>
 
-<div id="main-grid" class="main-grid-layout has-no-sidebar">
+<div id="main-grid" class="main-grid-layout <%= gridClass %>">
+  <!-- ===== Left Sidebar ===== -->
+  <% if (showLeftSidebar) { %>
+  <aside class="sidebar-left" aria-label="<%= __('sidebar.left') %>">
+    <%- partial('_partials/post/sidebar-left') %>
+  </aside>
+  <% } %>
+
+  <!-- ===== Main Content ===== -->
   <main id="main-content" class="page-container full-width">
     <%- partial('_partials/post/content-nav') %>
     <article class="page-content">
@@ -45,6 +67,16 @@
     </section>
     <% } %>
   </main>
+
+  <!-- ===== Right Sidebar ===== -->
+  <% if (showRightSidebar) { %>
+  <aside class="sidebar-right" aria-label="<%= __('sidebar.right') %>">
+    <%- partial('_partials/post/sidebar-right') %>
+  </aside>
+  <% } %>
+
+  <!-- ===== Mobile Bottom Sidebar ===== -->
+  <%- partial('_partials/post/mobile-sidebar') %>
 
   <%- partial('_partials/footer') %>
 </div>

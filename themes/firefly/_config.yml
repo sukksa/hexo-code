@@ -123,8 +123,14 @@ bangumi:
   user: ""
   # 导航与页面标题
   label: "追番"
-  # 每页条数
+  # 每页条数（分页关闭时作为「每批加载」的条数）
   page_size: 20
+  # 是否启用分页：
+  #   true  = 传统分页 + 分页器
+  #   false = 不分页，首屏只渲染 page_size 条，滚动到底部自动加载下一批
+  pagination: true
+  # 每行卡片数量，可选 4 或 5
+  columns: 4
   # 数据缓存时长（小时），离线构建时自动回退到旧缓存
   cache_ttl: 6
   # Tab 配置：key 唯一，path 为该 Tab 第 1 页的路径

@@ -1,6 +1,15 @@
 ---
-title: about
+title: 关于
 layout: about
 ---
 
-昨日は死にたかったのに、今日は何でもできる気がする
+> I Love the World and Everything In It
+
+### 「沃尔库塔-5」
+
+<!-- ## 联系我
+
+- 邮件：[sukksa@qq.com](mailto:sukksa@qq.com)
+- GitHub：[@sukksa](https://github.com/sukksa)
+- Bilibili：[space.bilibili.com/74396531](https://space.bilibili.com/74396531)
+- Bangumi：[bangumi.tv/user/726667](https://bangumi.tv/user/726667) -->

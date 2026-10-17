@@ -171,14 +171,18 @@ bangumi:
   enable: true
   user: "你的 Bangumi 用户名或 UID"
   label: "追番"          # 导航与页面标题
-  page_size: 20          # 每页条数
+  page_size: 20          # 每页条数（关闭分页时作为每批加载条数）
+  pagination: true       # false = 不分页，滚动到底部自动加载下一批
+  columns: 4             # 每行卡片数量，可选 4 或 5
   cache_ttl: 6           # 缓存小时数，离线构建时回退到旧缓存
   tabs:
     - { key: watching, label: 在看, type: 3, path: /bangumi }
     - { key: watched,  label: 看过, type: 2, path: /bangumi/watched, show_progress: false }
 ```
 
-生成的路由为 `{path}/`、`{path}/page/N/`；`show_progress: false` 的 Tab 不显示「看到 x 话」。
+分页开启时生成 `{path}/`、`{path}/page/N/`；关闭时只生成 `{path}/`，其余批次输出为
+`{path}/chunk/N.html` 片段，由 `js/features/bangumi-infinite.js` 在滚动到底部时按需拉取。
+`show_progress: false` 的 Tab 不显示「看到 x 话」。
 `pages.bangumi: false` 或 `bangumi.enable: false` 会同时隐藏导航里的「追番」入口。
 
 #### 留言板页 (`/guestbook/`)

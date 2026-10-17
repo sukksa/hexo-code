@@ -33,8 +33,14 @@
 .bangumi-tab.active { background: var(--primary, #10b981); border-color: var(--primary, #10b981); color: #fff; }
 .bangumi-tab-count { font-size: .78rem; font-weight: 500; opacity: .85; }
 
-/* ---- 卡片网格 ---- */
-.bangumi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; }
+/* ---- 卡片网格：横向排列，每行 4 / 5 个（theme.bangumi.columns） ---- */
+.bangumi-grid { display: grid; gap: 1rem; }
+.bangumi-grid--cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.bangumi-grid--cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+/* ---- 关闭分页时的滚动加载 ---- */
+.bangumi-sentinel { width: 100%; height: 1px; }
+.bangumi-loader { padding: .75rem 0 1rem; text-align: center; font-size: .85rem; color: var(--text-tertiary, #6b7280); }
 
 .bangumi-card { display: flex; flex-direction: column; text-decoration: none !important; color: inherit; transition: transform .2s ease; }
 .bangumi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 0, 0, .12); }
@@ -86,7 +92,16 @@
 .bangumi-page-link.disabled { opacity: .45; cursor: not-allowed; }
 .bangumi-page-ellipsis { color: var(--text-tertiary, #9ca3af); padding: 0 .15rem; }
 
-@media (max-width: 640px) {
-  .bangumi-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .75rem; }
+/* 平板：侧栏收窄，卡片降到 3 列 */
+@media (max-width: 1023px) {
+  .bangumi-grid--cols-4,
+  .bangumi-grid--cols-5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* 手机：侧栏隐藏，卡片 2 列 */
+@media (max-width: 767px) {
+  .bangumi-grid { gap: .75rem; }
+  .bangumi-grid--cols-4,
+  .bangumi-grid--cols-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bangumi-header { padding: 1rem 1.1rem; }
 }
