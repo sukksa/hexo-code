@@ -161,7 +161,9 @@ post:
   # 上下篇导航
   prev_next:
     enable: true
-  # 相关文章
+  # 相关文章 / 随机文章（文章底部那一整行推荐）
+  # 主题模板本身不读这个开关，由脚本 scripts/firefly-post-footer.js 在构建时处理
+  # false = 隐藏整行（相关文章 + 随机文章），true = 恢复显示
   related:
     enable: false
     maxCount: 6
@@ -560,7 +562,7 @@ music:
     # 类型，可选：playlist（歌单）, album（专辑）, artist（歌手）, song（单曲）
     type: "playlist"
     # 对应歌单/专辑/歌手/单曲的 ID
-    id: "10046455237"
+    id: "18495784452"
   # 本地音乐设置
   local:
     # 本地播放列表，每项包含 name, artist, url, cover, lrc
