@@ -3,6 +3,7 @@ node_modules/
 package-lock.json
 public/
 db.json
+.bangumi-cache.json
 .DS_Store
 *.log
 Thumbs.db

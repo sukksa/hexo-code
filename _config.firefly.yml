@@ -51,6 +51,9 @@ nav:
     - name: "标签"
       icon: "tag"
       path: "/tags/"
+    - name: "追番"
+      icon: "live_tv"
+      path: "/bangumi/"
     - name: "关于"
       icon: "user"
       path: "/about/"
@@ -102,7 +105,9 @@ pages:
   # 留言板页面
   guestbook: false
   # 番组页面（追番/追剧列表）
-  bangumi: false
+  # firefly 没有 bangumi 模板，这一页由 scripts/firefly-bangumi.js 生成，
+  # 构建时从 Bangumi API 拉取「在看」动画；false 会同时隐藏导航里的「追番」
+  bangumi: true
   # 相册页面
   gallery: false
 
@@ -203,9 +208,20 @@ post_list_layout:
 #  社交链接 (对应模板中 theme.social.*)
 # ============================================================
 social:
+  # 头像卡片（profile 组件）和首页 Banner 下方共用这份列表
   - name: "GitHub"
     icon: "github"
     url: "https://github.com/sukksa"
+  - name: "Email"
+    icon: "mail"
+    url: "mailto:sukksa@qq.com"
+  - name: "Bilibili"
+    icon: "bilibili"
+    url: "https://space.bilibili.com/74396531"
+  - name: "Bangumi"
+    # Material Symbols 图标名，live_tv 对应番剧；换成 "tv" / "movie" 也可以
+    icon: "live_tv"
+    url: "https://bangumi.tv/user/726667"
 
 # ============================================================
 #  导航栏 Logo (对应模板中 theme.logo.*)
@@ -354,10 +370,20 @@ profile:
   # 个人简介
   bio: "记录前端学习与日常"
   # 社交链接
+  # 注意：当前主题的头像卡片实际读取上面的 social 列表，这里仅作备用/同步
   links:
     - name: "GitHub"
       icon: "github"
       url: "https://github.com/sukksa"
+    - name: "Email"
+      icon: "mail"
+      url: "mailto:sukksa@qq.com"
+    - name: "Bilibili"
+      icon: "bilibili"
+      url: "https://space.bilibili.com/74396531"
+    - name: "Bangumi"
+      icon: "live_tv"
+      url: "https://bangumi.tv/user/726667"
 
 # ============================================================
 #  壁纸/背景设置 (backgroundWallpaper.ts)
